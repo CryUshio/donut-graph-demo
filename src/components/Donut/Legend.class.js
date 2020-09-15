@@ -80,6 +80,9 @@ export class Legend {
     return { textW, textH, texts };
   }
 
+  /**
+   * 线条起点圆点绘制
+   */
   drawLegendDot() {
     const { ctx, x, y } = this;
     const { r, opacity: endOpacity } = this.dot;
@@ -100,9 +103,9 @@ export class Legend {
   }
 
   /**
-   * 线条伸展动画
-   * @param lineStart 开始 x 坐标
-   * @param lineEnd 结束 x 坐标
+   * 线条伸展绘制
+   * @param {number} lineStart 开始 x 坐标
+   * @param {number} lineEnd 结束 x 坐标
    */
   drawLegendLine() {
     const { ctx, x, y, endX } = this;
@@ -125,6 +128,7 @@ export class Legend {
   }
 
   /**
+   * 图例图标绘制
    * @param {number} iconX 图例 x 坐标
    * @param {number} iconOffsetY 图例 y 偏移，用于适配多行图例标题的情况
    */
@@ -153,9 +157,10 @@ export class Legend {
   }
 
   /**
+   * 图例文本绘制
    * @param {number} textW 文字宽度
    * @param {number} textH 文字高度
-   * @param {string} text  文字内容
+   * @param {array} text  文字内容数组
    */
   drawLegendText(textW, textH, text) {
     const { ctx, x, y, endX } = this;
