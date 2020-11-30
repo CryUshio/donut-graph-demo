@@ -18,6 +18,10 @@ const ANGLE_180 = 180;
 const ANGLE_90 = 90;
 
 class Donut extends Component {
+  static defaultProps = {
+    showLegend: true
+  }
+
   canvas = null;
 
   componentDidMount() {
@@ -37,9 +41,16 @@ class Donut extends Component {
     this.draw();
   }
 
-  getLinearGradient(startColor, stopColor) {
+  getLinearGradient(startColor, stopColor, linearAngle = 0) {
     const { ctx } = this;
-    const lgr = ctx.createLinearGradient(ctx.width / 2 - R2, ctx.height / 2, ctx.width / 2 + R2, ctx.height / 2);
+
+    const rotate = deg(linearAngle);
+    const startX = ctx.width / 2 - R2 * Math.cos(rotate);
+    const startY = ctx.height / 2 - R2 * Math.sin(rotate);
+    const endX = ctx.width / 2 + R2 * Math.cos(rotate);
+    const endY = ctx.height / 2 + R2 * Math.sin(rotate);
+
+    const lgr = ctx.createLinearGradient(startX, startY, endX, endY);
     lgr.addColorStop(0, startColor);
     lgr.addColorStop(1, stopColor);
     return lgr;
@@ -52,7 +63,7 @@ class Donut extends Component {
       const part = { ...ColorSet[i % ColorSet.length], ...p };
       console.info('skr: part', part);
 
-      part.lgr = this.getLinearGradient(part.startColor, part.stopColor);
+      part.lgr = this.getLinearGradient(part.startColor, part.stopColor, part.linearAngle);
       part.startPer = basePer;
 
       basePer += part.per;
@@ -155,8 +166,9 @@ class Donut extends Component {
 
   draw() {
     const { source } = this;
+    const { showLegend } = this.props;
 
-    this.drawCenterText('学习类型', '#818181');
+    // this.drawCenterText('学习类型', '#818181');
 
     if (source.length === 0) {
       return;
@@ -175,7 +187,11 @@ class Donut extends Component {
         const startDeg = ANGLE_360 * startPer;
         const endDeg = ANGLE_360 * (startPer + per);
         this.drawRing(startDeg, endDeg, recentPart.lgr, recentPart.ellipseColor);
-        this.drawPartLegend(recentPart);
+        
+        if (showLegend) {
+          this.drawPartLegend(recentPart);
+        }
+
 
         // 跳到下一个部分
         pos++;
